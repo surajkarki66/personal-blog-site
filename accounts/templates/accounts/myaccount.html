@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div align="centre">
+<h1>Do you want to logout? </h1>
+<div class="border-top pt-3">
+    <small class="text-muted">
+     <a class="ml-2" href="{% url 'logout' %}">Log Out</a>
+     <a class="ml-2" href="{% url 'profile' %}">Change Profile Setting</a>
+     <a class="ml-2" href="/password-reset">Reset Password</a>
+    </small>
+</div>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</div>
+
+
+
+{% endblock %}
