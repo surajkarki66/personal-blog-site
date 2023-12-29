@@ -1,4 +1,4 @@
-from tinymce import HTMLField
+from tinymce.models import HTMLField
 from django.db import models
 from django.urls import reverse
 from accounts.models import Author
@@ -65,7 +65,7 @@ class Comment(models.Model):
 
 class Quote(models.Model):
     desc = models.TextField(max_length=200)
-    author = models.CharField(max_length=10)
+    author = models.CharField(max_length=100)
     image = models.ImageField()
 
     def __str__(self):

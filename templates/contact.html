@@ -2,7 +2,6 @@
 {% load static %}
 {% block title %} Contact Us {% endblock title %}
 {% block content %}
-
   <div class="container my-5">
     <h3>Contact Us</h3>
     <form action="." method="post">{% csrf_token %}
@@ -16,7 +15,7 @@
       </div>
       <div class="form-group">
         <label for="name">Phone</label>
-        <input type="tel" class="form-control" id="phone" name='phone' placeholder="Enter Your Phone Number">
+        <input type="number" class="form-control" id="phone" name='phone' placeholder="Enter Your Phone Number" />
       </div>
       <div class="form-group">
         <label for="desc">How May We Help You?</label>
@@ -25,4 +24,9 @@
       <button type="submit" class="btn btn-success">Submit</button>
     </form>
   </div>
+  {% if show_alert %}
+  <script>
+      alert("We will get back to you as soon as possible.");
+  </script>
+{% endif %}
 {% endblock content %}

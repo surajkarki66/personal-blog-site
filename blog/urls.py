@@ -60,7 +60,7 @@ path('password-reset-complete/',
     path('post/<id>/update/', post_update, name='post-update'),
     path('post/<id>/delete/', post_delete, name='post-delete'),
     path('tinymce/', include('tinymce.urls')),
-    path('oauth/',include('social_django.urls'),name='"social'),
+    path('',include('social_django.urls'),name="social"),
 ]
 
 if settings.DEBUG:

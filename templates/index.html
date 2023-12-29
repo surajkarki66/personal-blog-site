@@ -4,7 +4,7 @@
 {% block content %}
 
     <!-- Hero Section-->
-    <section style="background: url({% static 'img/hero.jpg' %}); background-size: cover; background-position: center center" class="hero">
+    <section style="background: url({% static 'img/hero.jpg' %}); background-size:cover;background-position:center center" class="hero">
       <div class="container">
         <div class="row">
           <div class="col-lg-7">
@@ -56,7 +56,7 @@
                 </header>
                 <p>{{ obj.overview|linebreaks|truncatechars:200 }}</p>
                 <footer class="post-footer d-flex align-items-center"><a href="#" class="author d-flex align-items-center flex-wrap">
-                    <div class="avatar"><img src="{{ obj.author.profile_picture.url }}" alt="..." class="img-fluid"></div>
+                    <div class="avatar"><img src="{{ obj.author.profile_picture.url }}" alt="..." class="img-fluid" style="height: 40px;"></div>
                     <div class="title"><span>{{ obj.author }}</span></div></a>
                   <div class="date"><i class="icon-clock"></i> {{ obj.timestamp|timesince }} ago</div>
                   <div class="comments"><i class="icon-comment"></i>{{ obj.comments.count }}</div>
@@ -80,7 +80,7 @@
             <h1 style=padding-bottom:10px >Motivation Of The Day</h1>
             {% for q in quote %}
 
-            <div class="avatar"><img src="{{ q.image.url }}" alt="..." class="img-fluid">
+            <div class="avatar"><img src="{{ q.image.url }}" alt="..." class="img-fluid" style="height:200px;width:auto;">
 
               <h2>{{ q.desc }}</h2><a href="#" class="hero-link">{{ q.author}}</a>
             </div>
@@ -100,7 +100,7 @@
         <div class="row">
           {% for obj in latest %}
           <div class="post col-md-4">
-            <div class="post-thumbnail"><a href="{{ obj.get_absolute_url }}"><img src="{{ obj.thumbnail.url }}" alt="..." class="img-fluid"></a></div>
+            <div class="post-thumbnail"><a href="{{ obj.get_absolute_url }}"><img src="{{ obj.thumbnail.url }}" alt="..." class="img-fluid" style="height: 200px; width: 100%;"></a></div>
             <div class="post-details">
               <div class="post-meta d-flex justify-content-between">
                 <div class="date">{{ obj.timestamp }}</div>

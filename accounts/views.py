@@ -1,13 +1,21 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import UserRegisterForm,UserUpdateForm
-from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpResponseRedirect,HttpResponse
-from .forms import EmailSignupForm,Signup
-
+import os
 import json
 import requests
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from email.mime.image import MIMEImage
+from django.db import transaction
+from blog.email_thread import EmailThread
+from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.template.loader import get_template
+
+from .forms import EmailSignupForm,Signup
+from .forms import UserRegisterForm,UserUpdateForm
+
 
 
 def register(request):
@@ -24,9 +32,10 @@ def register(request):
         r = requests.post('https://www.google.com/recaptcha/api/siteverify',data=captchadata)
         response = json.loads(r.text)
         verify = response['success']
-        print(verify)
-       
         
+        if(verify == False):
+            messages.error(request, "First verify the reCAPTCHA!")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -69,46 +78,55 @@ def profile(request):
     return render(request, 'accounts/profile.html', context)
 
 
+def send_email(user):
+    mail_subject = 'Information Regarding Subscription'
+    email_from = settings.EMAIL_HOST_USER
 
-MAILCHIMP_API_KEY = settings.MAILCHIMP_API_KEY
-MAILCHIMP_DATA_CENTER = settings.MAILCHIMP_DATA_CENTER
-MAILCHIMP_EMAIL_LIST_ID = settings.MAILCHIMP_EMAIL_LIST_ID
+    img_path = os.path.join(settings.MEDIA_ROOT, 'logo/me.png')
+  
+    if not os.path.exists(img_path):
+        raise FileNotFoundError({
+            'message': 'Image not found'
+        })
 
+    with open(img_path, 'rb') as image_file:
+        image_data = image_file.read()
 
-api_url = 'https://{dc}.api.mailchimp.com/3.0'.format(dc=MAILCHIMP_DATA_CENTER)
+    template = get_template('email_subscription.html')
 
-members_endpoint = '{api_url}/lists/{list_id}/members'.format(
-    api_url=api_url,
-    list_id=MAILCHIMP_EMAIL_LIST_ID
-)
+    app_domain = settings.SITE_DOMAIN
 
-
-
-
-
-
-def subscribe(email):
-    data = {
-        "email_address": email,
-        "status": "subscribed"
+    context = {
+        'user': user,
+        'app_domain': app_domain,
+        'link': "https://surajkarki66.com.np"
     }
-    r = requests.post(
-        members_endpoint,
-        auth=("", MAILCHIMP_API_KEY),
-        data=json.dumps(data)
+    html_message = template.render(context)
+    msg = EmailMultiAlternatives(
+        mail_subject, html_message, email_from, [user["email"]]
     )
-    return r.status_code, r.json()
+    msg.attach_alternative(html_message, 'text/html')
+    img = MIMEImage(image_data, 'png')
+    img.add_header('Content-Id', '<site_logo>')
+    img.add_header('Content-Disposition', 'inline')
+    msg.attach(img)
+    EmailThread(msg).start()
 
-
+@transaction.atomic
 def email_list_signup(request):
     form = EmailSignupForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             email_signup_qs = Signup.objects.filter(email=form.instance.email)
             if email_signup_qs.exists():
-                messages.info(request, "You are already subscribed")
+                print("already subscribed")
+                messages.success(request, "You are already subscribed.")
             else:
-                subscribe(form.instance.email)
+                user = {
+                    "email": form.instance.email,
+                }
+                send_email(user)
+                messages.success(request, "Thank you for subscribing! Check your email for confirmation.")
                 form.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

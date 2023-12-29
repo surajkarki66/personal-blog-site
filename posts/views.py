@@ -1,6 +1,16 @@
+import os
+
+from blog.email_thread import EmailThread
+from django.contrib import messages
+from django.db import transaction
 from django.db.models import Count, Q
+from django.conf import settings
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
+from email.mime.image import MIMEImage
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404, redirect, reverse
+
 from .forms import CommentForm, PostForm
 from .models import Post,Quote
 from accounts.models import Signup,Author,Contact
@@ -146,25 +156,67 @@ def post_delete(request, id):
     return redirect(reverse("post-list"))
 
 
+def send_email(user):
+    mail_subject = 'Information Regarding Help'
+    email_from = settings.EMAIL_HOST_USER
 
+    img_path = os.path.join(settings.MEDIA_ROOT, 'logo/me.png')
+  
+    if not os.path.exists(img_path):
+        raise FileNotFoundError({
+            'message': 'Image not found'
+        })
 
+    with open(img_path, 'rb') as image_file:
+        image_data = image_file.read()
 
+    template = get_template('email_help.html')
+
+    app_domain = settings.SITE_DOMAIN
+
+    context = {
+        'user': user,
+        'app_domain': app_domain,
+        'link': "https://surajkarki66.com.np"
+    }
+    html_message = template.render(context)
+    msg = EmailMultiAlternatives(
+        mail_subject, html_message, email_from, [user["email"]]
+    )
+    msg.attach_alternative(html_message, 'text/html')
+    img = MIMEImage(image_data, 'png')
+    img.add_header('Content-Id', '<site_logo>')
+    img.add_header('Content-Disposition', 'inline')
+    msg.attach(img)
+    EmailThread(msg).start()
+
+@transaction.atomic
 def contact(request):
+   context = {
+            'show_alert': False,
+            
+    }
    if request.method == "POST":
       name = request.POST.get('name', '')
       email = request.POST.get('email', '')
       phone = request.POST.get('phone', '')
       desc = request.POST.get('desc', '')
       contact = Contact(name=name, email=email, phone=phone, desc=desc)
-      contact.save()  # save it in database
-
-     
-   return render(request, 'contact.html')
+      user = {
+                "email": email,
+                "name": name
+             }
+      send_email(user)
+      contact.save()
+      context = {
+            'show_alert': True,
+            
+    }
+   return render(request, 'contact.html', context=context)
 
 
 def faq(request):
     contact = Contact.objects.all
-
     return render(request,'faq.html',{'contact':contact})
 
 

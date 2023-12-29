@@ -12,7 +12,7 @@
               <!-- post -->
               {% for post in queryset %}
               <div class="post col-xl-6">
-                <div class="post-thumbnail"><a href="{{ post.get_absolute_url }}"><img src="{{ post.thumbnail.url }}" alt="..." class="img-fluid"></a></div>
+                <div class="post-thumbnail"><a href="{{ post.get_absolute_url }}"><img src="{{ post.thumbnail.url }}" alt="..." class="img-fluid" style="height: 200px; width: 100%;"></a></div>
                 <div class="post-details">
                   <div class="post-meta d-flex justify-content-between">
                     {% comment %} <div class="date meta-last">20 May | 2016</div> {% endcomment %}
@@ -26,7 +26,7 @@
                   <p class="text-muted">{{ post.overview }}</p>
                   <footer class="post-footer d-flex align-items-center">
                     <a href="#" class="author d-flex align-items-center flex-wrap">
-                      <div class="avatar"><img src="{{ post.author.profile_picture.url }}" alt="..." class="img-fluid"></div>
+                      <div class="avatar"><img src="{{ post.author.profile_picture.url }}" alt="..." class="img-fluid" style="height: 40px;"></div>
                       <div class="title"><span>{{ post.author.user.username }}</span></div>
                     </a>
                     <div class="date"><i class="icon-clock"></i>{{ post.timestamp|timesince }} ago</div>
