@@ -28,4 +28,4 @@ social-auth-core
 sqlparse
 urllib3
 django-environ
-urllib3==1.26.6
+psycopg2-binary
