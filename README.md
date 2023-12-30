@@ -8,7 +8,7 @@ This is a demo personal blogging site that was created to include in my portfoli
 ## Live Preview
 [Click Here](https://personal-blog-site-ten.vercel.app/)
 
-### To run the application locally
+## Local Preview
 
 1. Create a python virtual environment
    ```bash
