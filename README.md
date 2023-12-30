@@ -34,5 +34,11 @@ This is a demo personal blogging site that was created to include in my portfoli
    ```
 7. Preview: http://127.0.0.1:8000
 
+Note: If you want to open the admin panel go to http://127.0.0.1:8000/admin, and make sure you have an admin account.
+To create admin account run the following command.
+```bash
+   python manage.py createsuperuser
+```
+
 
 Happy Coding !!
