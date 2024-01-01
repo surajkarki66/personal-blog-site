@@ -10,29 +10,33 @@ This is a demo personal blogging site that was created to include in my portfoli
 
 ## Local Preview
 
-1. Create a python virtual environment
+1. Clone the repository
+   ```bash
+   git clone https://github.com/surajkarki66/personal-blog-site
+   ```
+2.  Create a python virtual environment
    ```bash
    python -m venv venv
    ```
-2. Activate the virtual environment
+3. Activate the virtual environment
    ```bash
    source venv/bin/activate
    ```
-3. Install the requirements
+4. Install the requirements
    ```bash
    pip install -r "requirements.txt"
    ```
-4. Create a `.env` file in a project root directory and set all the environment variables based on the provided `.env.sample` example.
+5. Create a `.env` file in a project root directory and set all the environment variables based on the provided `.env.sample` example.
    
-5. Migrate the database
+6. Migrate the database
    ```bash
    python manage.py migrate
    ```
-6. Run the development server
+7. Run the development server
    ```bash
    python manage.py runserver
    ```
-7. Preview: http://127.0.0.1:8000
+8. Preview: http://127.0.0.1:8000
 
 Note: If you want to open the admin panel go to http://127.0.0.1:8000/admin, and make sure you have an admin account.
 To create admin account run the following command.
