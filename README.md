@@ -14,7 +14,7 @@ This is a demo personal blogging site that was created to include in my portfoli
    ```bash
    git clone https://github.com/surajkarki66/personal-blog-site
    ```
-2.  Create a python virtual environment
+2. Create a python virtual environment
    ```bash
    python -m venv venv
    ```
